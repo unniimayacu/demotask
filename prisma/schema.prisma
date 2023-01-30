@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model test1 {
+  car_id        Int       @id @default(autoincrement())
+  car_name      String?   @db.VarChar(100)
+  car_createdby DateTime? @db.Date
+  car_updatedby DateTime? @db.Date
+  car_price     String?   @db.VarChar(200)
+  car_image     String?   @db.VarChar(100)
+  test2         test2[]
+}
+
+model test2 {
+  customer_id        Int       @id @default(autoincrement())
+  cust_car_id        Int?
+  customer_name      String?   @db.VarChar(100)
+  customer_address   String?   @db.VarChar(100)
+  customer_createdby DateTime? @db.DateTime(0)
+  customer_updatedby DateTime? @db.DateTime(0)
+  test1              test1?    @relation(fields: [cust_car_id], references: [car_id], onDelete: NoAction, onUpdate: NoAction, map: "test2_FK")
+
+  @@index([cust_car_id], map: "test2_FK")
+}
+
+model testing3 {
+  testcar_id        Int       @id @default(autoincrement())
+  testcar_img       String?   @db.VarChar(500)
+  testcar_createdby DateTime? @db.DateTime(0)
+  testcar_updatedy  DateTime? @db.DateTime(0)
+}
