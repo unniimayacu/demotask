@@ -6,7 +6,7 @@ import * as express from 'express';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule,{ cors:true });
   app.use(express.static(join(__dirname, '..', '/uploads')));
-  await app.listen(5000);
+  await app.listen(3001);
 }
 bootstrap();
 

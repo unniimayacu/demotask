@@ -7,16 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model test1 {
-  car_id        Int       @id @default(autoincrement())
-  car_name      String?   @db.VarChar(100)
-  car_createdby DateTime? @db.Date
-  car_updatedby DateTime? @db.Date
-  car_price     String?   @db.VarChar(200)
-  car_image     String?   @db.VarChar(100)
-  test2         test2[]
-}
-
 model test2 {
   customer_id        Int       @id @default(autoincrement())
   cust_car_id        Int?
@@ -24,7 +14,7 @@ model test2 {
   customer_address   String?   @db.VarChar(100)
   customer_createdby DateTime? @db.DateTime(0)
   customer_updatedby DateTime? @db.DateTime(0)
-  test1              test1?    @relation(fields: [cust_car_id], references: [car_id], onDelete: NoAction, onUpdate: NoAction, map: "test2_FK")
+  test1              car?      @relation(fields: [cust_car_id], references: [car_id], onDelete: NoAction, onUpdate: NoAction, map: "test2_FK")
 
   @@index([cust_car_id], map: "test2_FK")
 }
@@ -34,4 +24,30 @@ model testing3 {
   testcar_img       String?   @db.VarChar(500)
   testcar_createdby DateTime? @db.DateTime(0)
   testcar_updatedy  DateTime? @db.DateTime(0)
+}
+
+model car {
+  car_id         Int        @id @default(autoincrement())
+  car_name       String?    @db.VarChar(100)
+  car_createdby  Int?
+  car_updatedby  Int?
+  car_price      Float?
+  car_image      String?    @db.VarChar(100)
+  car_created_at DateTime?  @db.Date
+  car_updated_at DateTime?  @db.Date
+  customer       customer[]
+  test2          test2[]
+}
+
+model customer {
+  customer_id         Int      @id @default(autoincrement())
+  customer_name       String   @db.VarChar(300)
+  customer_created_by Int
+  customer_updated_by Int
+  customer_created_at DateTime @db.Date
+  customer_updated_at DateTime @db.Date
+  customer_car_id     Int
+  car                 car      @relation(fields: [customer_car_id], references: [car_id], onUpdate: Restrict, map: "customer_ibfk_1")
+
+  @@index([customer_car_id], map: "customer_car_id")
 }

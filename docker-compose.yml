@@ -1,0 +1,37 @@
+version: '3'
+services:
+  # taskapp-nest-dev:
+  #   build:
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./public:/app/public
+  #   env_file:
+  #     - ./.env
+  #   depends_on:
+  #     - taskapp-mysql-dev
+  #   ports:
+  #     - 5000:5000
+  taskapp-mysql-dev:
+    image: mysql:latest
+    volumes:
+      - ./mysql:/data/application
+      - taskapp-mysql-dev:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Reon@123
+    ports:
+      - 3306:3306
+      # MYSQL_ROOT_HOST: '%'
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    links:
+      - taskapp-mysql-dev
+    environment:
+      PMA_HOST: taskapp-mysql-dev
+      PMA_PORT: 3306
+      # PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8081:80
+volumes:
+  taskapp-mysql-dev:
