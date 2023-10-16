@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, RequestMethod, ValidationPipe } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { prisma } from '@prisma/client';
@@ -17,22 +17,27 @@ import { CustomerService } from './customer/customer.service';
 import { CustomerController } from './customer/customer.controller';
 import { CustomerModule } from './customer/customer.module';
 
-
 @Module({
   imports: [
     MulterModule.register({
-        storage:diskStorage({
-          destination:'./uploads',
-          // filename: editFileName
-        })
+      storage: diskStorage({
+        destination: './uploads',
+        // filename: editFileName
+      }),
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', './uploads'),
     }),
     CarModule,
-    CustomerModule
+    CustomerModule,
   ],
   controllers: [AppController],
-  providers: [AppService ],
+  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  // configure(consumer: any) {
+  //   consumer
+  //     .apply(ValidationPipe)
+  //     .forRoutes({ path: '*', method: RequestMethod.ALL });
+  // }
+}
